@@ -26,7 +26,11 @@ Clone the repository and install dependencies:
 
 ```bash
 git clone https://github.com/yourusername/File_Metadata_Extractor.git
+```
+```bash
 cd File_Metadata_Extractor
+```
+```bash
 pip install -r requirements.txt
 ```
 
