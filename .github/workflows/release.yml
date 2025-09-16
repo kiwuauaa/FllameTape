@@ -100,7 +100,7 @@ jobs:
         echo "3. Run the tool: \`python metadata_extractor.py\`" >> release_info.md
 
     - name: 🎉 Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         tag_name: ${{ github.ref_name }}
         name: "🔍 FllameTape ${{ github.ref_name }}"
