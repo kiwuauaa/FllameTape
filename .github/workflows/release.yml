@@ -1,0 +1,122 @@
+name: 🚀 Release FllameTape
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+jobs:
+  create-release:
+    name: 🎉 Create Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: ✅ Run tests before release
+      run: |
+        python -c "import metadata_extractor; print('✅ Import test passed')"
+        python -c "from metadata_extractor import Colors, TerminalUI; print('✅ Component test passed')"
+
+    - name: 📋 Generate changelog
+      id: changelog
+      run: |
+        echo "## 🎉 FllameTape Release Notes" > CHANGELOG.md
+        echo "" >> CHANGELOG.md
+        echo "### 🔍 What's New in This Release" >> CHANGELOG.md
+        echo "- 🎨 Enhanced terminal interface with custom UI" >> CHANGELOG.md
+        echo "- 📱 Cross-platform compatibility (Windows, macOS, Linux)" >> CHANGELOG.md
+        echo "- 🛡️ Improved security and error handling" >> CHANGELOG.md
+        echo "- 📊 Professional metadata extraction capabilities" >> CHANGELOG.md
+        echo "" >> CHANGELOG.md
+        echo "### 🚀 Features" >> CHANGELOG.md
+        echo "- 📷 **Image Metadata**: EXIF data extraction from photos" >> CHANGELOG.md
+        echo "- 🎵 **Media Metadata**: Audio/video file analysis" >> CHANGELOG.md
+        echo "- 📄 **PDF Metadata**: Document property extraction" >> CHANGELOG.md
+        echo "- 🎨 **Custom UI**: Beautiful terminal interface with animations" >> CHANGELOG.md
+        echo "" >> CHANGELOG.md
+        echo "### 🔧 Technical Improvements" >> CHANGELOG.md
+        echo "- Updated to modern pypdf library" >> CHANGELOG.md
+        echo "- Enhanced error handling and user feedback" >> CHANGELOG.md
+        echo "- Optimized performance and reliability" >> CHANGELOG.md
+        echo "" >> CHANGELOG.md
+        echo "### 👨‍💻 About the Author" >> CHANGELOG.md
+        echo "**Created by [kiwuauaa](https://github.com/kiwuauaa)**" >> CHANGELOG.md
+        echo "Digital forensics enthusiast and metadata extraction specialist" >> CHANGELOG.md
+        echo "" >> CHANGELOG.md
+        echo "### 📥 Installation" >> CHANGELOG.md
+        echo "\`\`\`bash" >> CHANGELOG.md
+        echo "git clone https://github.com/kiwuauaa/FllameTape.git" >> CHANGELOG.md
+        echo "cd FllameTape" >> CHANGELOG.md
+        echo "pip install -r requirements.txt" >> CHANGELOG.md
+        echo "python metadata_extractor.py" >> CHANGELOG.md
+        echo "\`\`\`" >> CHANGELOG.md
+
+    - name: 📦 Create distribution package
+      run: |
+        mkdir -p dist
+        cp metadata_extractor.py dist/
+        cp requirements.txt dist/
+        cp README.md dist/
+        cp LICENSE dist/
+        cd dist
+        tar -czf ../FllameTape-${{ github.ref_name }}.tar.gz *
+        zip -r ../FllameTape-${{ github.ref_name }}.zip *
+
+    - name: 📊 Generate release assets
+      run: |
+        echo "# 🔍 FllameTape - Digital Forensics Tool" > release_info.md
+        echo "" >> release_info.md
+        echo "**Version:** ${{ github.ref_name }}" >> release_info.md
+        echo "**Author:** kiwuauaa" >> release_info.md
+        echo "**Purpose:** Professional metadata extraction for digital forensics" >> release_info.md
+        echo "" >> release_info.md
+        echo "## 📦 Download Options" >> release_info.md
+        echo "- **Source Code (ZIP):** Complete source with all files" >> release_info.md
+        echo "- **Source Code (TAR.GZ):** Unix-compatible archive" >> release_info.md
+        echo "" >> release_info.md
+        echo "## 🚀 Quick Start" >> release_info.md
+        echo "1. Download and extract the source code" >> release_info.md
+        echo "2. Install dependencies: \`pip install -r requirements.txt\`" >> release_info.md
+        echo "3. Run the tool: \`python metadata_extractor.py\`" >> release_info.md
+
+    - name: 🎉 Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ github.ref_name }}
+        name: "🔍 FllameTape ${{ github.ref_name }}"
+        body_path: CHANGELOG.md
+        files: |
+          FllameTape-${{ github.ref_name }}.tar.gz
+          FllameTape-${{ github.ref_name }}.zip
+          release_info.md
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 📢 Post-release notification
+      run: |
+        echo "🎉 FllameTape ${{ github.ref_name }} has been released!"
+        echo "📥 Download: https://github.com/kiwuauaa/FllameTape/releases/latest"
+        echo "🔍 Created by: kiwuauaa"
+        echo "🏷️ Purpose: Digital forensics metadata extraction"

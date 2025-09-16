@@ -1,0 +1,114 @@
+name: 🎨 Code Quality & Formatting
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  code-quality:
+    name: 🔍 Code Quality Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install quality tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install black isort flake8 pylint mypy bandit safety
+        pip install -r requirements.txt
+
+    - name: 🎨 Check code formatting with Black
+      run: |
+        echo "🎨 Checking code formatting..."
+        black --check --diff metadata_extractor.py
+
+    - name: 📚 Check import sorting with isort
+      run: |
+        echo "📚 Checking import organization..."
+        isort --check-only --diff metadata_extractor.py
+
+    - name: 🔍 Lint with flake8
+      run: |
+        echo "🔍 Running flake8 linting..."
+        flake8 metadata_extractor.py --max-line-length=88 --extend-ignore=E203
+
+    - name: 🕵️ Advanced linting with pylint
+      run: |
+        echo "🕵️ Running pylint analysis..."
+        pylint metadata_extractor.py --disable=C0103,R0903 || true
+
+    - name: 🔒 Security analysis with bandit
+      run: |
+        echo "🔒 Running security analysis..."
+        bandit -r . -f json
+
+    - name: 🛡️ Dependency vulnerability check
+      run: |
+        echo "🛡️ Checking for vulnerable dependencies..."
+        safety check -r requirements.txt
+
+    - name: 📊 Generate quality report
+      run: |
+        echo "## 📊 FllameTape Code Quality Report" > quality_report.md
+        echo "### 🎨 Formatting" >> quality_report.md
+        echo "- ✅ Black formatting check passed" >> quality_report.md
+        echo "- ✅ Import sorting check passed" >> quality_report.md
+        echo "### 🔍 Linting" >> quality_report.md
+        echo "- ✅ Flake8 linting passed" >> quality_report.md
+        echo "- ✅ Pylint analysis completed" >> quality_report.md
+        echo "### 🛡️ Security" >> quality_report.md
+        echo "- ✅ Security scan completed" >> quality_report.md
+        echo "- ✅ Dependency check passed" >> quality_report.md
+        echo "### 👨‍💻 Author: kiwuauaa" >> quality_report.md
+        echo "### 🏷️ Project: Digital Forensics Metadata Extractor" >> quality_report.md
+
+  auto-format:
+    name: 🤖 Auto-format Code
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install formatting tools
+      run: |
+        python -m pip install --upgrade pip
+        pip install black isort
+
+    - name: 🎨 Auto-format with Black
+      run: |
+        black metadata_extractor.py
+
+    - name: 📚 Auto-sort imports with isort
+      run: |
+        isort metadata_extractor.py
+
+    - name: 💾 Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add -A
+        git diff --staged --quiet || git commit -m "🎨 Auto-format code with Black and isort"
+
+    - name: 📤 Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.head_ref }}

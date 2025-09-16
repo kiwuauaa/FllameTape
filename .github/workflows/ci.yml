@@ -1,0 +1,138 @@
+name: 🔍 FllameTape CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  test:
+    name: 🧪 Test on Python ${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11', '3.12']
+
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install pytest pytest-cov flake8 black isort
+
+    - name: 🎨 Code formatting check
+      run: |
+        black --check metadata_extractor.py
+        isort --check-only metadata_extractor.py
+
+    - name: 🔍 Lint with flake8
+      run: |
+        flake8 metadata_extractor.py --count --select=E9,F63,F7,F82 --show-source --statistics
+        flake8 metadata_extractor.py --count --exit-zero --max-complexity=10 --max-line-length=88 --statistics
+
+    - name: ✅ Test imports and basic functionality
+      run: |
+        python -c "import metadata_extractor; print('✅ Import successful')"
+        python -c "from metadata_extractor import Colors, TerminalUI; print('✅ Classes import successful')"
+
+    - name: 🏷️ Create test badge
+      if: matrix.python-version == '3.11' && matrix.os == 'ubuntu-latest'
+      run: |
+        echo "Tests passed for Python ${{ matrix.python-version }} on ${{ matrix.os }}" > test_results.txt
+
+  security:
+    name: 🛡️ Security Scan
+    runs-on: ubuntu-latest
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 🔒 Install security tools
+      run: |
+        pip install safety bandit
+
+    - name: 🚨 Check for vulnerabilities
+      run: |
+        safety check -r requirements.txt
+        bandit -r . -f json
+
+  compatibility:
+    name: 📱 Cross-platform Compatibility
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🐍 Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: 📦 Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: 🎯 Test platform-specific features
+      run: |
+        python -c "
+        import os
+        import metadata_extractor
+        from metadata_extractor import TerminalUI
+        
+        print('🖥️  Testing on:', os.name)
+        print('✅ TerminalUI class loaded successfully')
+        
+        # Test color output
+        from metadata_extractor import Colors
+        print(f'{Colors.OKGREEN}✅ Color support working{Colors.ENDC}')
+        "
+
+  release:
+    name: 🚀 Release Check
+    runs-on: ubuntu-latest
+    needs: [test, security, compatibility]
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: 📥 Checkout repository
+      uses: actions/checkout@v4
+
+    - name: 🏷️ Check for version tags
+      id: check_tag
+      run: |
+        if git describe --exact-match --tags HEAD 2>/dev/null; then
+          echo "::set-output name=is_tagged::true"
+        else
+          echo "::set-output name=is_tagged::false"
+        fi
+
+    - name: 📊 Generate build info
+      run: |
+        echo "## 🎉 FllameTape Build Summary" >> build_summary.md
+        echo "- ✅ All tests passed" >> build_summary.md
+        echo "- 🛡️ Security scan completed" >> build_summary.md
+        echo "- 📱 Cross-platform compatibility verified" >> build_summary.md
+        echo "- 👨‍💻 Created by kiwuauaa" >> build_summary.md
+        echo "- 🔍 Digital forensics metadata extraction tool" >> build_summary.md

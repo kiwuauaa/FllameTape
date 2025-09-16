@@ -1,0 +1,41 @@
+# 🤖 Dependabot configuration for FllameTape
+# Automatically updates dependencies to keep the project secure and up-to-date
+# Maintained by kiwuauaa - Digital forensics enthusiast
+
+version: 2
+updates:
+  # Python dependencies
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    assignees:
+      - "kiwuauaa"
+    reviewers:
+      - "kiwuauaa"
+    labels:
+      - "dependencies"
+      - "security"
+      - "automated"
+    commit-message:
+      prefix: "🔒 "
+      include: "scope"
+    
+  # GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/.github/workflows"
+    schedule:
+      interval: "monthly"
+    open-pull-requests-limit: 3
+    assignees:
+      - "kiwuauaa"
+    labels:
+      - "ci/cd"
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "⚙️ "
+      include: "scope"
