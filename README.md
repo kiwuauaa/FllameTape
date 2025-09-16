@@ -1,42 +1,71 @@
-# File Metadata Extractor
+<div align="center">
 
-Extract metadata (EXIF for images, ID3 for audio, PDF info, etc.) from files using Python.
+# 🎬 FllameTape - File Metadata Extractor
 
-🔧 Built with Python using [pymediainfo](https://github.com/sbraz/pymediainfo), [Pillow](https://python-pillow.org/), and [PyPDF2](https://github.com/py-pdf/pypdf).
+```
+███████╗██╗     ██╗      █████╗ ███╗   ███╗███████╗████████╗ █████╗ ██████╗ ███████╗
+██╔════╝██║     ██║     ██╔══██╗████╗ ████║██╔════╝╚══██╔══╝██╔══██╗██╔══██╗██╔════╝
+█████╗  ██║     ██║     ███████║██╔████╔██║█████╗     ██║   ███████║██████╔╝█████╗  
+██╔══╝  ██║     ██║     ██╔══██║██║╚██╔╝██║██╔══╝     ██║   ██╔══██║██╔═══╝ ██╔══╝  
+██║     ███████╗███████╗██║  ██║██║ ╚═╝ ██║███████╗   ██║   ██║  ██║██║     ███████╗
+╚═╝     ╚══════╝╚══════╝╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝╚═╝     ╚══════╝
+```
 
-Ideal for digital forensics exercises, data analysis, or simply exploring file metadata.
+### 🔍 *A powerful Python tool to extract metadata from various file types*
+
+**📷 Images (EXIF) • 🎵 Audio/Video (MediaInfo/ID3) • 📄 PDF Documents**
+
+[![Python](https://img.shields.io/badge/Python-3.7+-blue.svg)](https://www.python.org/downloads/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/kiwuauaa/FllameTape/graphs/commit-activity)
+
+</div>
 
 ---
 
-## Features
+## 👤 Author
 
-- Extract EXIF data from images (JPEG, PNG, etc.) using Pillow
-- Extract media metadata (audio, video) including ID3 tags using pymediainfo
-- Extract metadata from PDF files (basic info) using PyPDF2
-- Custom interactive terminal interface with ASCII art banner
-- Colorful and structured output for ease of reading
-- Error handling for unsupported or missing metadata
-- Easy-to-use menu-driven CLI
+**Created by [kiwuauaa](https://github.com/kiwuauaa)**
 
 ---
 
-## Installation
+🔧 **Built with Python** using:
+- [Pillow](https://python-pillow.org/) - For image EXIF data extraction
+- [pymediainfo](https://github.com/sbraz/pymediainfo) - For audio/video metadata
+- [pypdf](https://github.com/py-pdf/pypdf) - For PDF document information
 
-Clone the repository and install dependencies:
-
-```bash
-git clone https://github.com/yourusername/File_Metadata_Extractor.git
-```
-```bash
-cd File_Metadata_Extractor
-```
-```bash
-pip install -r requirements.txt
-```
+**Perfect for:** Digital forensics exercises, data analysis, or simply exploring file metadata.
 
 ---
 
-## Usage
+## ✨ Features
+
+- 📷 **Image Metadata**: Extract EXIF data from JPEG, PNG, and other image formats
+- 🎵 **Media Metadata**: Extract comprehensive metadata from audio and video files including ID3 tags
+- 📄 **PDF Metadata**: Extract document information from PDF files
+- 🎨 **Interactive Interface**: Custom terminal interface with ASCII art banner
+- 🌈 **Colorful Output**: Structured and easy-to-read colored terminal output
+- 🛡️ **Error Handling**: Robust error handling for unsupported or corrupted files
+- 🎯 **User-Friendly**: Simple menu-driven command-line interface
+
+---
+
+## 🚀 Installation
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/kiwuauaa/FllameTape.git
+   cd FllameTape
+   ```
+
+2. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+---
+
+## 💻 Usage
 
 Run the script from the terminal:
 
@@ -44,22 +73,70 @@ Run the script from the terminal:
 python metadata_extractor.py
 ```
 
-# File Metadata Extractor
+### Interactive Menu
 
-This Python script extracts metadata from various file types, including images (EXIF), audio/video (MediaInfo/ID3), and PDFs.  It features a user-friendly command-line interface with colored output and an interactive menu.
+The script provides a simple interactive menu:
 
-## Usage
+1. **📷 Image (EXIF)** - Extract EXIF metadata from image files
+2. **🎵 Audio/Video (MediaInfo/ID3)** - Extract metadata from media files
+3. **📄 PDF** - Extract document information from PDF files
+4. **🚪 Exit** - Close the application
 
-The script guides you through a simple process:
+### Steps:
+1. Select the file type (1-4)
+2. Enter the full path to your file
+3. View the extracted metadata in your terminal
 
-1. **Select File Type:** Choose the file type for metadata extraction:
-    * 1. Image (EXIF)
-    * 2. Audio/Video (MediaInfo / ID3)
-    * 3. PDF
-    * 4. Exit
+---
 
-2. **Enter Your Choice:** Input your choice (1-4).
+## 📁 Supported File Types
 
-3. **Enter File Path:** Provide the full path to your file (e.g., `/path/to/your/file.jpg`).
+- **Images**: JPEG, PNG, TIFF, and other formats supported by Pillow
+- **Audio**: MP3, FLAC, OGG, M4A, and more
+- **Video**: MP4, AVI, MKV, MOV, and other common formats
+- **Documents**: PDF files
 
-### The script will then process the file and display the extracted metadata in your terminal.
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Feel free to:
+- Report bugs
+- Suggest new features
+- Submit pull requests
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## ⭐ Show Your Support
+
+If you find this project helpful, please consider giving it a star on GitHub!
+
+---
+
+## 👨‍💻 About the Author
+
+**[kiwuauaa](https://github.com/kiwuauaa)** - *Creator & Lead Developer*
+
+- 🔬 Passionate about digital forensics and data analysis
+- 🛡️ Cyber security and IT student
+
+*"Uncovering the hidden stories that files tell through their metadata"*
+
+### Connect with the Author:
+- 🐙 GitHub: [@kiwuauaa](https://github.com/kiwuauaa)
+
+---
+
+<div align="center">
+
+**Built with ❤️ by [kiwuauaa](https://github.com/kiwuauaa)**
+
+*Making metadata extraction accessible to everyone*
+
+</div>
